@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محاكاة متابعين إنستجرام</title>
+    <style>
+        :root {
+            --ig-primary-text: #262626;
+            --ig-secondary-text: #8e8e8e;
+            --ig-primary-button: #0095f6;
+            --ig-primary-button-hover: #0077cc;
+            --ig-border: #dbdbdb;
+            --ig-bg: #fafafa;
+            --ig-white: #ffffff;
+            --ig-blue-badge: #0095f6;
+            --ig-story-gradient: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        
+        body {
+            background-color: var(--ig-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .instagram-container {
+            background-color: var(--ig-white);
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            overflow: hidden;
+            border: 1px solid var(--ig-border);
+        }
+        
+        .ig-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--ig-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .ig-brand {
+            font-size: 24px;
+            font-weight: 600;
+            background: var(--ig-story-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .ig-profile {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--ig-border);
+        }
+        
+        .ig-avatar {
+            width: 77px;
+            height: 77px;
+            border-radius: 50%;
+            background: var(--ig-story-gradient);
+            padding: 2px;
+            margin-left: 20px;
+        }
+        
+        .ig-avatar-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: var(--ig-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 1px solid var(--ig-border);
+        }
+        
+        .ig-avatar-inner span {
+            font-size: 30px;
+            color: var(--ig-primary-text);
+        }
+        
+        .ig-info {
+            flex: 1;
+        }
+        
+        .ig-username {
+            font-size: 20px;
+            font-weight: 400;
+            color: var(--ig-primary-text);
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .ig-verified {
+            color: var(--ig-blue-badge);
+            margin-right: 5px;
+            font-size: 18px;
+        }
+        
+        .ig-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .ig-stat {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .ig-stat-number {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ig-primary-text);
+        }
+        
+        .ig-stat-label {
+            font-size: 14px;
+            color: var(--ig-secondary-text);
+            margin-top: 2px;
+        }
+        
+        .ig-progress {
+            padding: 20px;
+            border-bottom: 1px solid var(--ig-border);
+        }
+        
+        .ig-progress-bar {
+            height: 6px;
+            background-color: var(--ig-border);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .ig-progress-fill {
+            height: 100%;
+            background: var(--ig-story-gradient);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .ig-progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--ig-secondary-text);
+        }
+        
+        .ig-form {
+            padding: 20px;
+        }
+        
+        .ig-input-group {
+            margin-bottom: 15px;
+        }
+        
+        .ig-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--ig-secondary-text);
+        }
+        
+        .ig-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--ig-border);
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: var(--ig-bg);
+        }
+        
+        .ig-button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--ig-primary-button);
+            color: var(--ig-white);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .ig-button:hover {
+            background-color: var(--ig-primary-button-hover);
+        }
+        
+        .ig-counter {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: var(--ig-story-gradient);
+            color: var(--ig-white);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            display: none;
+        }
+        
+        .ig-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--ig-white);
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .ig-notification-icon {
+            margin-left: 10px;
+            color: var(--ig-blue-badge);
+            font-size: 20px;
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 0;
+                background-color: var(--ig-white);
+            }
+            
+            .instagram-container {
+                border-radius: 0;
+                box-shadow: none;
+                border: none;
+            }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="instagram-container">
+        <div class="ig-header">
+            <div class="ig-brand">Instagram</div>
+        </div>
+        
+        <div class="ig-profile">
+            <div class="ig-avatar">
+                <div class="ig-avatar-inner">
+                    <span id="ig-avatar-text">U</span>
+                </div>
+            </div>
+            
+            <div class="ig-info">
+                <div class="ig-username">
+                    <span class="ig-verified">✓</span>
+                    <span id="ig-username-display">username</span>
+                </div>
+                
+                <div class="ig-stats">
+                    <div class="ig-stat">
+                        <div class="ig-stat-number" id="ig-posts">0</div>
+                        <div class="ig-stat-label">منشورات</div>
+                    </div>
+                    <div class="ig-stat">
+                        <div class="ig-stat-number" id="ig-followers">0</div>
+                        <div class="ig-stat-label">متابعون</div>
+                    </div>
+                    <div class="ig-stat">
+                        <div class="ig-stat-number" id="ig-following">0</div>
+                        <div class="ig-stat-label">متابَعون</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="ig-progress">
+            <div class="ig-progress-bar">
+                <div class="ig-progress-fill" id="ig-progress"></div>
+            </div>
+            <div class="ig-progress-text">
+                <span>0 متابع</span>
+                <span id="ig-target-display">0 متابع</span>
+            </div>
+        </div>
+        
+        <div class="ig-form">
+            <div class="ig-input-group">
+                <label class="ig-label" for="ig-username-input">اسم المستخدم</label>
+                <input type="text" class="ig-input" id="ig-username-input" placeholder="اسم المستخدم على إنستجرام">
+            </div>
+            
+            <div class="ig-input-group">
+                <label class="ig-label" for="ig-target-input">عدد المتابعين المطلوب</label>
+                <input type="number" class="ig-input" id="ig-target-input" placeholder="مثال: 10000">
+            </div>
+            
+            <button class="ig-button" id="ig-start-btn">بدء المحاكاة</button>
+        </div>
+    </div>
+    
+    <div class="ig-counter" id="ig-counter">
+        المتابعون: <span id="ig-counter-number">0</span>
+    </div>
+    
+    <div class="ig-notification" id="ig-notification">
+        <span id="ig-notification-text">جاري زيادة المتابعين...</span>
+        <span class="ig-notification-icon">✓</span>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const startBtn = document.getElementById('ig-start-btn');
+            const usernameInput = document.getElementById('ig-username-input');
+            const targetInput = document.getElementById('ig-target-input');
+            const counter = document.getElementById('ig-counter');
+            const notification = document.getElementById('ig-notification');
+            
+            startBtn.addEventListener('click', function() {
+                const username = usernameInput.value.trim();
+                const target = parseInt(targetInput.value);
+                
+                // التحقق من صحة المدخلات
+                if (!username) {
+                    showNotification('الرجاء إدخال اسم مستخدم صحيح', 'error');
+                    return;
+                }
+                
+                if (isNaN(target) || target <= 0) {
+                    showNotification('الرجاء إدخال عدد متابعين صحيح', 'error');
+                    return;
+                }
+                
+                // تحديث واجهة المستخدم
+                document.getElementById('ig-username-display').textContent = username;
+                document.getElementById('ig-avatar-text').textContent = username.charAt(0).toUpperCase();
+                document.getElementById('ig-target-display').textContent = formatNumber(target) + ' متابع';
+                
+                // إخفاء حقول الإدخال
+                usernameInput.style.display = 'none';
+                targetInput.style.display = 'none';
+                document.querySelectorAll('.ig-label').forEach(el => el.style.display = 'none');
+                startBtn.style.display = 'none';
+                
+                // عرض العداد والإشعار
+                counter.style.display = 'block';
+                showNotification('جاري زيادة المتابعين...', 'info');
+                
+                // بدء المحاكاة بعد تأخير قصير
+                setTimeout(() => {
+                    simulateGrowth(username, target);
+                }, 500);
+            });
+            
+            function simulateGrowth(username, target) {
+                const progressBar = document.getElementById('ig-progress');
+                const followersDisplay = document.getElementById('ig-followers');
+                const counterNumber = document.getElementById('ig-counter-number');
+                const postsDisplay = document.getElementById('ig-posts');
+                const followingDisplay = document.getElementById('ig-following');
+                
+                let current = 0;
+                const increment = Math.max(1, Math.floor(target / 100));
+                const duration = 3000; // 3 ثواني للمحاكاة
+                const steps = Math.ceil(target / increment);
+                const intervalTime = duration / steps;
+                
+                const interval = setInterval(function() {
+                    current += increment;
+                    if (current > target) current = target;
+                    
+                    // تحديث القيم
+                    const formatted = formatNumber(current);
+                    followersDisplay.textContent = formatted;
+                    counterNumber.textContent = formatted;
+                    progressBar.style.width = (current / target * 100) + '%';
+                    
+                    // تحديث الإحصائيات الأخرى
+                    postsDisplay.textContent = formatNumber(Math.floor(current / 1111));
+                    followingDisplay.textContent = formatNumber(Math.floor(current / 111));
+                    
+                    // التأثير عند الانتهاء
+                    if (current >= target) {
+                        clearInterval(interval);
+                        showNotification('تم زيادة المتابعين بنجاح!', 'success');
+                        
+                        // تأثير النبض
+                        counter.style.animation = 'pulse 0.5s';
+                        setTimeout(() => {
+                            counter.style.animation = '';
+                        }, 500);
+                    }
+                }, intervalTime);
+            }
+            
+            function formatNumber(num) {
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            
+            function showNotification(message, type) {
+                const notification = document.getElementById('ig-notification');
+                const notificationText = document.getElementById('ig-notification-text');
+                const notificationIcon = document.querySelector('.ig-notification-icon');
+                
+                notificationText.textContent = message;
+                
+                // تغيير اللون حسب نوع الإشعار
+                if (type === 'error') {
+                    notificationIcon.innerHTML = '✕';
+                    notificationIcon.style.color = '#ed4956';
+                } else if (type === 'success') {
+                    notificationIcon.innerHTML = '✓';
+                    notificationIcon.style.color = '#0095f6';
+                } else {
+                    notificationIcon.innerHTML = '⏳';
+                    notificationIcon.style.color = '#8e8e8e';
+                }
+                
+                notification.style.opacity = '1';
+                notification.style.animation = 'fadeIn 0.3s';
+                
+                // إخفاء الإشعار بعد 3 ثواني
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
